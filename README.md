@@ -1,18 +1,18 @@
-# CAE · Painel 3D
+# CAE-360
 
-Painel 3D (three.js) do Centro de Aquisições Específicas (CAE, UASG 120195): quartel com o Comando e as divisões de Contrato, Obtenção e Administrativa. Clique em cada prédio para ver as informações da divisão.
+CAE-360 (three.js) é o painel do Centro de Aquisições Específicas (CAE, UASG 120195): quartel com o Comando e as divisões de Contrato, Obtenção e Administrativa. Clique em cada prédio para ver as informações da divisão.
 
 - Página única: `index.html` (sem build)
 - Dados de exemplo; integração futura com Tesouro Gerencial, SIAFI e Comprasnet/PNCP
 
-Desenvolvido por **DomDevLabs** · v1.18.1
+Desenvolvido por **DomDevLabs** · v1.19.0
 
 ## Instalar no celular
 
 - **Android (Chrome):** toque em **Instalar app** no topo do painel, ou no menu ⋮ > *Instalar app*.
 - **iPhone (Safari):** toque em **Instalar app** e siga o passo a passo: Compartilhar > *Adicionar à Tela de Início*.
 
-O ícone é o brasão do CAE e o app abre em tela cheia com o nome **CAE Dashboard**.
+O ícone é o brasão do CAE e o app abre em tela cheia com o nome **CAE-360**.
 
 ## Banco de dados (leitura ao vivo)
 
@@ -33,5 +33,5 @@ Para regravar a cópia de reserva: Actions › “Atualizar snapshot de reserva�
 ## Painel executivo (`/executivo`)
 
 Versão corporativa do painel, sem 3D: visão geral da execução orçamentária, orçamento por UG/ND/PI, notas de empenho, contratos, atas de registro, licitações do PCA e restos a pagar.
-Lê as mesmas planilhas ao vivo (mesma biblioteca `tools/dados.lib.js`) e, se o Google não responder, usa a cópia de reserva embutida no `index.html` do painel 3D.
+Lê as mesmas planilhas ao vivo (mesma biblioteca `tools/dados.lib.js`) e, se o Google não responder, usa a cópia de reserva embutida no `index.html` do CAE-360.
 Endereço: https://cae-dashboard-3d.vercel.app/executivo · v1.0.1

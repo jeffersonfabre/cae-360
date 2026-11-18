@@ -1,5 +1,5 @@
-// CAE Dashboard — service worker (v1.18.1)
-const CACHE = 'cae-dashboard-v1.18.1';
+// CAE-360 — service worker (v1.19.0)
+const CACHE = 'cae-360-v1.19.0';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/maskable-512.png', '/icons/apple-touch-icon.png'];
 
@@ -14,7 +14,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  // painel executivo e biblioteca de dados: sempre da rede (não entram no cache do painel 3D)
+  // painel executivo e biblioteca de dados: sempre da rede (não entram no cache do CAE-360)
   if (url.origin === location.origin && (url.pathname.startsWith('/executivo') || url.pathname.startsWith('/tools/'))) return;
   // página: rede primeiro (pega atualizações), cache se estiver offline
   if (req.mode === 'navigate' && (url.pathname === '/' || url.pathname === '/index.html')) {

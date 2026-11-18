@@ -254,7 +254,7 @@ footer button{background:none;border:1px solid var(--linha);border-radius:4px;pa
     <img src="/executivo/domdevlabs.png" alt="Logotipo DomDevLabs" width="38" height="38">
     <span>Desenvolvido por <b>DomDevLabs</b> · <a href="mailto:domdevlabs@gmail.com">domdevlabs@gmail.com</a></span>
     <span class="esp"></span>
-    <a href="/">Abrir o painel 3D</a>
+    <a href="/">Abrir o CAE-360</a>
     <button type="button" id="tema">Tema: automático</button>
     <span>v1.0.1</span>
   </div>
@@ -265,7 +265,7 @@ footer button{background:none;border:1px solid var(--linha);border-radius:4px;pa
 <script>
 'use strict';
 const VERSAO='1.0.1';
-// A = "CAE - Execução Orçamentária" (Execução, NE, RP, NC) · B = "DO - 2026" (Certames, ARP) · antigo = Contratos e Sistemas PI (igual ao painel 3D)
+// A = "CAE - Execução Orçamentária" (Execução, NE, RP, NC) · B = "DO - 2026" (Certames, ARP) · antigo = Contratos e Sistemas PI (igual ao CAE-360)
 const PL_A='1XYsCO3YrBFPov2aEXlQp36mgX9D86kMvtUA0M3AfUAA', PL_B='1gad1QGaEpzZKHCdHjNCjoE12KiF1eG7PBDiqHoBMjw4', PL_OLD='19Za-0_spkX6aiCL0e8h-pTljgTLzwSAb8GwBmXxEy3g';
 const SHEET={src:{exec:{id:PL_A,gid:404651175},ne:{id:PL_A,gid:553150809},rp:{id:PL_A,gid:962457407},nc:{id:PL_A,gid:986011348},lc:{id:PL_B,gid:2032627767},ar:{id:PL_B,gid:558842760},ct:{id:PL_OLD,gid:843442876},sp:{id:PL_OLD,gid:1393334488}}};
 let EX,NE,RP,CT,AR,LC,SP,NC,SIGLAS={},FONTE='',vistaAtual='';
@@ -318,7 +318,7 @@ async function lerAoVivo(){
   if(r.ne.rows.length<100||r.ex.rows.length<10) throw new Error('planilha veio incompleta');
   return r;
 }
-// cópia de reserva: a mesma que o painel 3D guarda embutida (regravada pelo fluxo "Atualizar snapshot de reserva")
+// cópia de reserva: a mesma que o CAE-360 guarda embutida (regravada pelo fluxo "Atualizar snapshot de reserva")
 async function lerReserva(){
   const r=await fetch('/',{cache:'no-cache'}); if(!r.ok) throw new Error('HTTP '+r.status);
   const h=await r.text(), pega=id=>{ const m=new RegExp(`<script id="${id}" type="application/json">([\\s\\S]*?)<\/script>`).exec(h); return m?JSON.parse(m[1]):null; };

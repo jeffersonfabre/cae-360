@@ -1,7 +1,7 @@
 {
-  "name": "CAE Dashboard",
-  "short_name": "CAE Dashboard",
-  "description": "Painel 3D do Centro de Aquisições Específicas (CAE)",
+  "name": "CAE-360",
+  "short_name": "CAE-360",
+  "description": "CAE-360 · Centro de Aquisições Específicas (CAE)",
   "id": "/",
   "start_url": "/?source=pwa",
   "scope": "/",
