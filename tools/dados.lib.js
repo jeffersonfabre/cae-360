@@ -116,10 +116,10 @@ const CAEData=(()=>{
   function nc(csv){ // aba "NC": notas de crédito (cabeçalho: Emissão, Número, ..., CRÉDITO RECEBIDO)
     const t=table(parseCSV(csv),['Emissão','Número','CRÉDITO RECEBIDO']), g=t.get, rows=[];
     for(const r of t.data){ const n=g(r,'Número'); if(!n) continue;
-      rows.push([isoDate(g(r,'Emissão')),n.replace(/^\d+(\d{4}NC\d+)$/,'$1'),g(r,'UGR'),g(r,'UG Exec'),g(r,'PTRES'),g(r,'FONTE'),g(r,'ND'),g(r,'PI'),g(r,'Evento'),g(r,'Esfera'),g(r,'RO'),g(r,'Obs'),r2(num(g(r,'CRÉDITO RECEBIDO')))]); }
+      rows.push([isoDate(g(r,'Emissão')),n.replace(/^\d+(\d{4}NC\d+)$/,'$1'),g(r,'UGR'),g(r,'UG Exec'),g(r,'PTRES'),g(r,'FONTE'),g(r,'ND'),g(r,'PI'),g(r,'Evento'),g(r,'Esfera'),g(r,'RO'),g(r,'Obs'),r2(num(g(r,'CRÉDITO RECEBIDO'))),(/^(\d{6})/.exec(n)||[])[1]||'']); }
     rows.sort((x,y)=>x[0]<y[0]?1:x[0]>y[0]?-1:x[1]<y[1]?1:-1);
     const dts=rows.map(r=>r[0]).filter(Boolean), mx=dts.reduce((m,d)=>d>m?d:m,'');
-    return {ref:mx?mx.slice(8)+'/'+mx.slice(5,7)+'/'+mx.slice(0,4):'',cols:['data','nc','ugr','ugexec','ptres','fonte','nd','pi','evento','esfera','ro','obs','valor'],rows};
+    return {ref:mx?mx.slice(8)+'/'+mx.slice(5,7)+'/'+mx.slice(0,4):'',cols:['data','nc','ugr','ugexec','ptres','fonte','nd','pi','evento','esfera','ro','obs','valor','emissora'],rows};
   }
   function sistemas(csv){ // aba "Sistemas PI": Plano Interno -> Sigla do sistema
     const t=table(parseCSV(csv),['Plano Interno','Sigla']), g=t.get, pi={};
