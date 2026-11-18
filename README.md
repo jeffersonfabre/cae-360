@@ -33,5 +33,5 @@ Para regravar a cópia de reserva: Actions › “Atualizar snapshot de reserva�
 ## Painel executivo (`/executivo`)
 
 Versão corporativa do painel, sem 3D: visão geral da execução orçamentária, orçamento por UG/ND/PI, notas de empenho, contratos, atas de registro, licitações do PCA e restos a pagar.
-Lê a mesma planilha-banco ao vivo (mesma biblioteca `tools/dados.lib.js`) e, se o Google não responder, usa a cópia de reserva embutida no `index.html` do painel 3D.
-Endereço: https://cae-dashboard-3d.vercel.app/executivo · v1.0.0
+Lê as mesmas planilhas ao vivo (mesma biblioteca `tools/dados.lib.js`) e, se o Google não responder, usa a cópia de reserva embutida no `index.html` do painel 3D.
+Endereço: https://cae-dashboard-3d.vercel.app/executivo · v1.0.1

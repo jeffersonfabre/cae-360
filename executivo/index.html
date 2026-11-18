@@ -256,7 +256,7 @@ footer button{background:none;border:1px solid var(--linha);border-radius:4px;pa
     <span class="esp"></span>
     <a href="/">Abrir o painel 3D</a>
     <button type="button" id="tema">Tema: automático</button>
-    <span>v1.0.0</span>
+    <span>v1.0.1</span>
   </div>
 </footer>
 <div id="aviso" role="status"></div>
@@ -264,9 +264,11 @@ footer button{background:none;border:1px solid var(--linha);border-radius:4px;pa
 <script src="/tools/dados.lib.js"></script>
 <script>
 'use strict';
-const VERSAO='1.0.0';
-const SHEET={id:'19Za-0_spkX6aiCL0e8h-pTljgTLzwSAb8GwBmXxEy3g',gid:{exec:1963592069,ne:892020825,rp:435294578,ct:843442876,ar:57478241,lc:1997489688,sp:1393334488}};
-let EX,NE,RP,CT,AR,LC,SP,SIGLAS={},FONTE='',vistaAtual='';
+const VERSAO='1.0.1';
+// A = "CAE - Execução Orçamentária" (Execução, NE, RP, NC) · B = "DO - 2026" (Certames, ARP) · antigo = Contratos e Sistemas PI (igual ao painel 3D)
+const PL_A='1XYsCO3YrBFPov2aEXlQp36mgX9D86kMvtUA0M3AfUAA', PL_B='1gad1QGaEpzZKHCdHjNCjoE12KiF1eG7PBDiqHoBMjw4', PL_OLD='19Za-0_spkX6aiCL0e8h-pTljgTLzwSAb8GwBmXxEy3g';
+const SHEET={src:{exec:{id:PL_A,gid:404651175},ne:{id:PL_A,gid:553150809},rp:{id:PL_A,gid:962457407},nc:{id:PL_A,gid:986011348},lc:{id:PL_B,gid:2032627767},ar:{id:PL_B,gid:558842760},ct:{id:PL_OLD,gid:843442876},sp:{id:PL_OLD,gid:1393334488}}};
+let EX,NE,RP,CT,AR,LC,SP,NC,SIGLAS={},FONTE='',vistaAtual='';
 
 /* ---------- formatação ---------- */
 const $=s=>document.querySelector(s);
@@ -300,19 +302,19 @@ function soma(rows){ const t={rec:0,disp:0,aliq:0,emliq:0,liqpag:0,pago:0};
 function agrupa(rows,chave){ const m=new Map(); for(const r of rows){ const k=chave(r); (m.get(k)||m.set(k,[]).get(k)).push(r); }
   return [...m].map(([k,rs])=>({k,...soma(rs)})).sort((a,b)=>b.rec-a.rec); }
 
-async function lerCSV(gid){
+async function lerCSV(k){ const S=SHEET.src[k];
   let erro;
   for(const tipo of ['export','gviz']){
-    const url=tipo==='export'?`https://docs.google.com/spreadsheets/d/${SHEET.id}/export?format=csv&gid=${gid}`:`https://docs.google.com/spreadsheets/d/${SHEET.id}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    const url=tipo==='export'?`https://docs.google.com/spreadsheets/d/${S.id}/export?format=csv&gid=${S.gid}`:`https://docs.google.com/spreadsheets/d/${S.id}/gviz/tq?tqx=out:csv&gid=${S.gid}`;
     try{ const r=await fetch(url+'&_='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
       const t=await r.text(); if(t.length<200||/^\s*<(!doctype|html)/i.test(t)) throw new Error('resposta inválida'); return t; }
     catch(e){ erro=e; } }
   throw erro;
 }
 async function lerAoVivo(){
-  const G=SHEET.gid, opc=g=>lerCSV(g).catch(()=>null);
-  const [e,n,rp,ct,ar,lc,sp]=await Promise.all([lerCSV(G.exec),lerCSV(G.ne),opc(G.rp),opc(G.ct),opc(G.ar),opc(G.lc),opc(G.sp)]);
-  const r=CAEData.transformar(e,n,SIGLAS,rp,ct,ar,lc,sp);
+  const opc=k=>lerCSV(k).catch(()=>null);
+  const [e,n,rp,ct,ar,lc,sp,nc]=await Promise.all([lerCSV('exec'),lerCSV('ne'),opc('rp'),opc('ct'),opc('ar'),opc('lc'),opc('sp'),opc('nc')]);
+  const r=CAEData.transformar(e,n,SIGLAS,rp,ct,ar,lc,sp,nc);
   if(r.ne.rows.length<100||r.ex.rows.length<10) throw new Error('planilha veio incompleta');
   return r;
 }
@@ -321,10 +323,10 @@ async function lerReserva(){
   const r=await fetch('/',{cache:'no-cache'}); if(!r.ok) throw new Error('HTTP '+r.status);
   const h=await r.text(), pega=id=>{ const m=new RegExp(`<script id="${id}" type="application/json">([\\s\\S]*?)<\/script>`).exec(h); return m?JSON.parse(m[1]):null; };
   const ex=pega('execData'), ne=pega('neData'); if(!ex||!ne) throw new Error('cópia de reserva não encontrada');
-  return {ex,ne,rp:pega('rpData'),ct:pega('ctData'),ar:pega('arData'),lc:pega('lcData'),sp:pega('spData')};
+  return {ex,ne,rp:pega('rpData'),ct:pega('ctData'),ar:pega('arData'),lc:pega('lcData'),sp:pega('spData'),nc:pega('ncData')};
 }
 function aplicar(r,fonte){
-  EX=r.ex; NE=r.ne; RP=r.rp||RP; CT=r.ct||CT; AR=r.ar||AR; LC=r.lc||LC; SP=r.sp||SP;
+  EX=r.ex; NE=r.ne; RP=r.rp||RP; CT=r.ct||CT; AR=r.ar||AR; LC=r.lc||LC; SP=r.sp||SP; NC=r.nc||NC;
   if(EX.siglas) SIGLAS=Object.assign({},EX.siglas,SIGLAS);
   FONTE=fonte;
   $('#posicao').textContent=EX.ref||NE.ref||'—';
@@ -583,7 +585,7 @@ const fA={q:'',faixa:'vig',unid:''};
 function vAtas(el){
   if(!AR){ el.innerHTML='<h2 class="tit">Atas de registro de preços</h2><p class="lede">A aba de atas não respondeu. Toque em Atualizar para tentar de novo.</p>'; return; }
   const unids=[...new Set(AR.rows.map(r=>r[18]).filter(u=>u&&u!=='NÃO LOCALIZADO'))].sort();
-  el.innerHTML=`<h2 class="tit">Atas de registro de preços</h2><p class="lede">Atas geradas pelos pregões do CAE e a vigência de cada uma. Planilha atualizada em ${esc(AR.ref||'—')}.</p>
+  el.innerHTML=`<h2 class="tit">Atas de registro de preços</h2><p class="lede">Atas geradas pelos pregões do CAE e a vigência de cada uma. Atualizadas de segunda a sexta, às 7h.</p>
   <div id="aInd"></div>
   <div class="filtros">
     <label>Pesquisar<input type="search" id="aQ" placeholder="Ata, pregão, objeto, item, fornecedor…" value="${esc(fA.q)}"></label>
@@ -619,7 +621,7 @@ const ETAPAS=['NÃO INICIADO','FASE INTERNA','CONFERÊNCIA PRELIMINAR','ADEQUAÇ
 const fL={q:'',status:'',area:''};
 const rotEtapa=s=>{ s=String(s||'sem status').toLowerCase(); s=s.charAt(0).toUpperCase()+s.slice(1); return s.replace(/uapd/i,'UApd').replace(/ cae\b/,' CAE').replace(/^Tod$/,'TOD').replace(/ - /,' · '); };
 function vLicitacoes(el){
-  if(!LC){ el.innerHTML='<h2 class="tit">Licitações</h2><p class="lede">A aba Gerencial não respondeu. Toque em Atualizar para tentar de novo.</p>'; return; }
+  if(!LC){ el.innerHTML='<h2 class="tit">Licitações</h2><p class="lede">A aba Certames não respondeu. Toque em Atualizar para tentar de novo.</p>'; return; }
   const cont=new Map(); for(const r of LC.rows) cont.set(r[0]||'(sem status)',(cont.get(r[0]||'(sem status)')||0)+1);
   const fora=[...cont.keys()].filter(k=>!ETAPAS.includes(k)).sort((a,b)=>cont.get(b)-cont.get(a));
   const max=Math.max(1,...cont.values());
