@@ -75,7 +75,9 @@
   .p-trow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .bigback{all:unset;cursor:pointer;display:none;align-items:center;gap:8px;padding:11px 20px 11px 14px;border-radius:12px;background:var(--accent,#2f7bff);color:#fff;font-weight:800;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .bigback svg{width:20px;height:20px}.bigback:hover{filter:brightness(1.12)}.bigback:active{transform:scale(.97)}
-  #panel.intopic .bigback{display:inline-flex}
+  .homebtn{all:unset;cursor:pointer;display:none;align-items:center;gap:8px;padding:11px 18px 11px 14px;border-radius:12px;background:rgba(20,34,59,.9);border:1px solid var(--line);color:var(--text);font-weight:800;font-size:16px}
+  .homebtn svg{width:20px;height:20px}.homebtn:hover{border-color:var(--accent,#2f7bff)}
+  #panel.intopic .bigback,#panel.intopic .homebtn{display:inline-flex}
   #panel.intopic .close{display:none}
   #panel.intopic .p-head .refresh{right:18px}
   .p-head p{color:var(--muted);font-size:13px;margin-top:4px}
@@ -156,6 +158,7 @@
 
   .exf input{flex:1;min-width:0;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:600 13px Inter,sans-serif}
   .exf label{min-width:78px}
+  .chart.chartbig svg{max-height:none}
   .chart{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 8px 4px}
   .tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
   table.ne{min-width:680px;font-size:11px}
@@ -168,7 +171,7 @@
   .p-head p .back,.back{all:unset;cursor:pointer;color:var(--accent,var(--blue));font-weight:700;font-size:13px}
   .back:hover{text-decoration:underline}
   .topics{display:flex;flex-direction:column;gap:10px}
-  .topic{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:15px;font-weight:700}
+  .topic{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:18px;font-weight:700}
   .topic:hover{border-color:var(--accent,var(--blue));transform:translateY(-1px)}
   .topic i{font-style:normal;color:var(--accent,var(--blue));font-size:22px}
   .clr{all:unset;cursor:pointer;color:var(--accent,var(--blue));font-weight:700;margin-left:6px;text-decoration:underline}
@@ -252,6 +255,7 @@
   #toast.show{opacity:1;transform:translate(-50%,0)}#toast.ok{border-color:#22c38e}#toast.err{border-color:#ff6b6b}
   @media (max-width:720px){#panel{top:0;height:100%;border-radius:0;transform:translateY(14px)}#panel.open{transform:none}.chips .chip{display:none}#refreshBtn span{display:none}.nd-v{margin-left:0;text-align:left}}
   .chart svg{max-height:340px}
+  .chart.chartbig svg{max-height:none}
   td .st{white-space:nowrap}
   .bars.wide .bar-row{grid-template-columns:minmax(120px,240px) 1fr 150px}.bars.wide .n{overflow:visible;text-overflow:clip;white-space:normal;font-size:12px}.bars.wide .val{text-align:right}
   .itl{margin:0;padding-left:18px;font-size:12.5px;line-height:1.5;color:var(--text)}.itl li{margin-bottom:6px}
@@ -301,7 +305,7 @@
 <aside id="panel">
   <div class="p-head">
     <span class="tag" id="pTag"></span>
-    <div class="p-trow"><button class="bigback" id="pBackBig" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Voltar</span></button><h2 id="pTitle"></h2></div>
+    <div class="p-trow"><button class="bigback" id="pBackBig" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Voltar</span></button><button class="homebtn" id="pHomeBtn" aria-label="Voltar à tela inicial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Início</span></button><h2 id="pTitle"></h2></div>
     <p id="pSub"></p>
     <button class="refresh" id="pRefresh" aria-label="Atualizar dados da planilha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>Atualizar</button>
     <button class="close" id="pClose" aria-label="Fechar">×</button>
@@ -309,7 +313,7 @@
   <div class="kpis" id="pKpis"></div>
   <div class="tabs" id="pTabs"></div>
   <div class="p-body" id="pBody"></div>
-  <div class="credit"><span>Desenvolvido por <b>DomDevLabs</b></span><button class="fx" id="pClose2" aria-label="Fechar">✕ Fechar</button><span>v1.18.0</span></div>
+  <div class="credit"><span>Desenvolvido por <b>DomDevLabs</b></span><button class="fx" id="pClose2" aria-label="Fechar">✕ Fechar</button><span>v1.18.1</span></div>
 </aside>
 <section id="neDetail" aria-label="Detalhe da nota de empenho">
   <div class="nd-wrap">
@@ -822,39 +826,49 @@ function lcDetail(i){
 
 
 /* ---------- Nota de Crédito (aba "NC" da planilha CAE - Execução Orçamentária) ---------- */
-const ncF={q:'',ug:'',em:'',lim:100};
+const ncF={q:'',ug:'',em:'',ex:'120195',lim:100};
 const ncMesNome=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 const ncEsf={'1':'1 · Fiscal','2':'2 · Seguridade','3':'3 · Investimento'};
 function ncUgOk(r){ const q=ctNorm(ncF.ug).trim(); if(!q) return true; return ctNorm(sig(r[2])+' '+r[2]).includes(q); }
 function ncBase(){ const q=ctNorm(ncF.q).trim();
-  return NC.rows.filter(r=>ncUgOk(r)&&(!ncF.em||r[13]===ncF.em)&&(!q||ctNorm([r[1],r[7],r[8],r[11],r[10],r[6],r[4],r[5],r[13]].join(' | ')).includes(q))); }
+  return NC.rows.filter(r=>ncUgOk(r)&&(!ncF.ex||r[3]===ncF.ex)&&(!ncF.em||r[13]===ncF.em)&&(!q||ctNorm([r[1],r[7],r[8],r[11],r[10],r[6],r[4],r[5],r[13]].join(' | ')).includes(q))); }
 function ncRender(body){
   if(!NC){ body.innerHTML='<p class="exn">Aba “NC” não encontrada ou vazia na planilha “CAE - Execução Orçamentária”.</p>'; drawKpis([]); return; }
   const ugs=[...new Set(NC.rows.map(r=>r[2]).filter(Boolean))].map(c=>sig(c)).filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const ems=[...new Set(NC.rows.map(r=>r[13]).filter(Boolean))].sort();
   body.innerHTML=`<div class="filters"><div class="exf"><label for="ncUg">UG responsável</label><input id="ncUg" list="ncUgDL" type="text" placeholder="Digite a sigla ou o código (ex.: PAME, 120641)" autocomplete="off" spellcheck="false" value="${esc(ncF.ug)}"><datalist id="ncUgDL">${ugs.map(s=>`<option value="${esc(s)}">`).join('')}</datalist></div>`+
     `<div class="exf"><label for="ncEm">UASG que enviou o crédito</label><select id="ncEm"><option value="">Todas</option>${ems.map(c=>`<option value="${esc(c)}"${c===ncF.em?' selected':''}>${esc(c)}</option>`).join('')}</select></div>`+
+    `<div class="exf"><label for="ncEx">UG executora (UG Exec)</label><select id="ncEx"><option value="120195"${ncF.ex==='120195'?' selected':''}>120195 · CAE (bate com a Execução)</option><option value=""${ncF.ex===''?' selected':''}>Todas as UGs executoras</option></select></div>`+
     `<div class="exf"><label for="ncQ">Buscar</label><input id="ncQ" type="search" placeholder="Nº da NC, PI, ND, PTRES, fonte, descrição…" autocomplete="off" value="${esc(ncF.q)}"></div></div><div id="ncOut"></div>`;
   const upd=()=>{ ncF.lim=100; ncOut(); };
   body.querySelector('#ncUg').oninput=e=>{ ncF.ug=e.target.value; upd(); };
   body.querySelector('#ncEm').onchange=e=>{ ncF.em=e.target.value; upd(); };
+  body.querySelector('#ncEx').onchange=e=>{ ncF.ex=e.target.value; upd(); };
   body.querySelector('#ncQ').oninput=e=>{ ncF.q=e.target.value; upd(); };
   ncOut();
 }
 function ncChart(rows){
   const m=new Map(); for(const r of rows){ const k=r[0]?r[0].slice(0,7):''; if(!k) continue; const o=m.get(k)||{k,n:0,v:0}; o.n++; o.v+=r[12]; m.set(k,o); }
   const L=[...m.values()].sort((a,b)=>a.k<b.k?-1:1); if(!L.length) return '<p class="exn">Sem notas de crédito com esses filtros.</p>';
-  const W=760,H=380,pl=14,pr=14,pt=130,pb=38,bw=(W-pl-pr)/L.length,hh=H-pt-pb, maxV=Math.max(1,...L.map(g=>Math.abs(g.v))), maxN=Math.max(1,...L.map(g=>g.n));
+  const W=1000,H=400,pl=70,pr=56,pt=40,pb=44,pw=W-pl-pr,hh=H-pt-pb,bw=pw/L.length;
+  const nice=(x)=>{ const e=Math.pow(10,Math.floor(Math.log10(x||1))), f=x/e; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e; };
+  const vmax=nice(Math.max(1,...L.map(g=>g.v))), vmin=Math.min(0,...L.map(g=>g.v)), nmax=nice(Math.max(1,...L.map(g=>g.n)));
+  const vlo=vmin<0?-nice(-vmin):0, span=vmax-vlo, Y=v=>pt+hh-(v-vlo)/span*hh, YN=n=>pt+hh-n/nmax*hh;
   const sh=x=>{ const a=Math.abs(x); return (x<0?'-':'')+(a>=1e9?(a/1e9).toLocaleString('pt-BR',{maximumFractionDigits:2})+' bi':a>=1e6?(a/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi':a>=1e3?Math.round(a/1e3)+' mil':Math.round(a)+''); };
-  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Valor mensal e quantidade de notas de crédito">`, pts=[];
-  L.forEach((g,i)=>{ const h=Math.abs(g.v)/maxV*hh, bx=pl+i*bw+bw*.16, w=bw*.68, cx=bx+w/2, y=pt+hh-h;
-    s+=`<rect x="${bx.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(h,1.5).toFixed(1)}" rx="3" fill="${g.v<0?'#ff6b6b':'var(--accent,#2f7bff)'}"><title>${ncMesNome[+g.k.slice(5,7)-1]}/${g.k.slice(0,4)}: ${brl2(g.v)} · ${g.n} NC</title></rect>`+
-      `<text x="${cx.toFixed(1)}" y="${(y-5).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e8eef8">${sh(g.v)}</text>`+
-      `<text x="${cx.toFixed(1)}" y="${H-pb+15}" text-anchor="middle" font-size="11" fill="#8fa3c2">${ncMesNome[+g.k.slice(5,7)-1]}/${g.k.slice(2,4)}</text>`;
-    pts.push([cx,100-g.n/maxN*62,g.n]); });
-  s+=`<text x="${pl}" y="16" font-size="11" font-weight="700" fill="#ffc53d">Quantidade de NC por mês</text><line x1="${pl}" x2="${W-pr}" y1="108" y2="108" stroke="rgba(255,255,255,.12)"/><text x="${pl}" y="${pt-8}" font-size="11" font-weight="700" fill="#8fa3c2">Valor líquido por mês</text>`+`<polyline points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="#ffc53d" stroke-width="2.2" stroke-linejoin="round"/>`+
-    pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.6" fill="#ffc53d"/><text x="${p[0].toFixed(1)}" y="${(p[1]-8).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffc53d">${p[2]}</text>`).join('');
-  return s+'</svg><div class="lg" style="display:flex;gap:18px;font-size:12px;color:var(--muted);margin-top:6px"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent,#2f7bff);margin-right:6px"></i>Valor líquido das NC no mês</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ffc53d;margin-right:6px"></i>Quantidade de NC (nº absoluto)</span></div>';
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Valor mensal e quantidade de notas de crédito">`;
+  for(let i=0;i<=5;i++){ const v=vlo+span*i/5, y=Y(v), n=nmax*i/5;
+    s+=`<line x1="${pl}" x2="${W-pr}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.09)"/><text x="${pl-8}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="12" fill="#8fa3c2">${sh(v)}</text>`+
+      (vlo===0?`<text x="${W-pr+8}" y="${(y+4).toFixed(1)}" text-anchor="start" font-size="12" fill="#ffc53d">${Math.round(n)}</text>`:''); }
+  s+=`<text x="${pl-8}" y="${pt-18}" text-anchor="end" font-size="12" font-weight="700" fill="#8fa3c2">Valor (R$)</text>`+(vlo===0?`<text x="${W-pr+8}" y="${pt-18}" font-size="12" font-weight="700" fill="#ffc53d">Qtd. NC</text>`:'');
+  const pts=[];
+  L.forEach((g,i)=>{ const bx=pl+i*bw+bw*.2, w=bw*.6, cx=bx+w/2, y0=Y(0), y=Y(g.v), top=Math.min(y,y0), hgt=Math.max(Math.abs(y-y0),1.5);
+    s+=`<rect x="${bx.toFixed(1)}" y="${top.toFixed(1)}" width="${w.toFixed(1)}" height="${hgt.toFixed(1)}" rx="4" fill="${g.v<0?'#ff6b6b':'#2f7bff'}"><title>${ncMesNome[+g.k.slice(5,7)-1]}/${g.k.slice(0,4)}: ${brl2(g.v)} · ${g.n} NC</title></rect>`+
+      `<text x="${cx.toFixed(1)}" y="${g.v<0?(top+hgt+15).toFixed(1):(top-7).toFixed(1)}" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e8eef8" stroke="#14223b" stroke-width="4" paint-order="stroke">${sh(g.v)}</text>`+
+      `<text x="${cx.toFixed(1)}" y="${H-pb+20}" text-anchor="middle" font-size="12.5" fill="#8fa3c2">${ncMesNome[+g.k.slice(5,7)-1]}/${g.k.slice(2,4)}</text>`;
+    pts.push([cx,YN(g.n),g.n]); });
+  s+=`<polyline points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="#ffc53d" stroke-width="2.6" stroke-linejoin="round"/>`+
+    pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="5" fill="#ffc53d" stroke="#0b1220" stroke-width="2"/><text x="${p[0].toFixed(1)}" y="${(p[1]-11).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="800" fill="#ffc53d" stroke="#0b1220" stroke-width="4" paint-order="stroke">${p[2]}</text>`).join('');
+  return s+'</svg><div style="display:flex;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 8px 8px"><span><i style="display:inline-block;width:11px;height:11px;border-radius:2px;background:#2f7bff;margin-right:6px"></i>Valor líquido das NC no mês (eixo da esquerda)</span><span><i style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#ffc53d;margin-right:6px"></i>Quantidade de NC, nº absoluto (eixo da direita)</span></div>';
 }
 function ncOut(){
   const out=document.getElementById('ncOut'); if(!out) return; const rows=ncBase();
@@ -862,13 +876,13 @@ function ncOut(){
   const porEm=new Map(); for(const r of rows){ const k=r[13]||'—'; porEm.set(k,(porEm.get(k)||0)+r[12]); }
   const emTxt=[...porEm].sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+': '+mi(v)).join(' · ');
   drawKpis([{l:'Créditos recebidos (líquido)',v:mi(liq),s:rows.length.toLocaleString('pt-BR')+' notas de crédito'},{l:'Recebimentos',v:mi(rec),s:'soma das NC positivas'},{l:'Anulações',v:mi(anu),s:rows.filter(r=>r[12]<0).length.toLocaleString('pt-BR')+' NC negativas'},{l:'Por UASG emissora',v:String(porEm.size),s:emTxt||'sem dados'}]);
-  let h=`<h3>Valor e quantidade de NC por mês</h3><div class="chart">${ncChart(rows)}</div>`+
+  let h=`<h3>Valor e quantidade de NC por mês</h3><div class="chart chartbig">${ncChart(rows)}</div>`+
     `<p class="exn" style="margin-top:14px">${rows.length.toLocaleString('pt-BR')} ${rows.length===1?'nota de crédito listada':'notas de crédito listadas'} · crédito líquido <b>${brl2(liq)}</b></p><h3>Notas de crédito</h3>`;
   if(!rows.length) h+='<p class="exn">Nenhuma nota de crédito encontrada com esses filtros.</p>';
-  else h+=`<div class="tw"><table class="ne" style="min-width:980px"><thead><tr><th>Data</th><th>NC</th><th>UASG emissora</th><th>UG resp.</th><th>Esfera</th><th>PTRES</th><th>Fonte</th><th>PI</th><th>ND</th><th>Descrição</th><th style="text-align:right">Crédito recebido</th></tr></thead><tbody>`+
-    rows.slice(0,ncF.lim).map(r=>`<tr><td>${dtbr(r[0])}</td><td><b>${esc(r[1])}</b></td><td><b>${esc(r[13]||'—')}</b></td><td>${esc(sig(r[2]))}</td><td style="white-space:nowrap">${esc(ncEsf[r[9]]||r[9])}</td><td>${esc(r[4])}</td><td>${esc(r[5])}</td><td>${esc(r[7])}</td><td>${esc(r[6])}</td><td class="ds">${esc(r[11])}</td><td style="text-align:right;white-space:nowrap${r[12]<0?';color:#ff6b6b':''}">${brl2(r[12])}</td></tr>`).join('')+`</tbody></table></div>`+
+  else h+=`<div class="tw"><table class="ne" style="min-width:1040px"><thead><tr><th>Data</th><th>NC</th><th>UASG emissora</th><th>UG exec.</th><th>UG resp.</th><th>Esfera</th><th>PTRES</th><th>Fonte</th><th>PI</th><th>ND</th><th>Descrição</th><th style="text-align:right">Crédito recebido</th></tr></thead><tbody>`+
+    rows.slice(0,ncF.lim).map(r=>`<tr><td>${dtbr(r[0])}</td><td><b>${esc(r[1])}</b></td><td><b>${esc(r[13]||'—')}</b></td><td>${esc(r[3])}</td><td>${esc(sig(r[2]))}</td><td style="white-space:nowrap">${esc(ncEsf[r[9]]||r[9])}</td><td>${esc(r[4])}</td><td>${esc(r[5])}</td><td>${esc(r[7])}</td><td>${esc(r[6])}</td><td class="ds">${esc(r[11])}</td><td style="text-align:right;white-space:nowrap${r[12]<0?';color:#ff6b6b':''}">${brl2(r[12])}</td></tr>`).join('')+`</tbody></table></div>`+
     (rows.length>ncF.lim?`<button class="more" id="ncMore">Mostrar mais ${Math.min(100,rows.length-ncF.lim)} (restam ${(rows.length-ncF.lim).toLocaleString('pt-BR')})</button>`:'');
-  h+=`<div class="note">${ATU7} Fonte: aba “NC” da planilha “CAE - Execução Orçamentária” (notas de crédito recebidas pela UASG 120195), posição até <b>${esc(NC.ref||'—')}</b>. A UASG emissora são os 6 primeiros dígitos do nº da NC (120002 ou 121002). Valores negativos são anulações de crédito.</div>`;
+  h+=`<div class="note">${ATU7} Fonte: aba “NC” da planilha “CAE - Execução Orçamentária” (notas de crédito recebidas pela UASG 120195), posição até <b>${esc(NC.ref||'—')}</b>. A UASG emissora são os 6 primeiros dígitos do nº da NC (120002 ou 121002). Valores negativos são anulações de crédito. O filtro “UG executora” vem em 120195 (CAE), que é o que bate com a Execução; escolha “Todas” para ver também NC de outras UGs executoras.</div>`;
   out.innerHTML=h;
   const mb=out.querySelector('#ncMore'); if(mb) mb.onclick=()=>{ ncF.lim+=100; ncOut(); };
 }
@@ -1116,7 +1130,7 @@ function facadeTex(base, cols, rows, lit){
   });
 }
 function label(text, color, items=[]){
-  const W=640, HEAD=96, LINE=46, PAD=22, H=HEAD+(items.length?items.length*LINE+PAD:0);
+  const W=780, HEAD=96, LINE=60, PAD=24, H=HEAD+(items.length?items.length*LINE+PAD:0);
   const t=canvasTex(W,H,(g,w,h)=>{
     g.fillStyle='rgba(11,18,32,.9)';
     const r=30; g.beginPath(); g.moveTo(r,0); g.arcTo(w,0,w,h,r); g.arcTo(w,h,0,h,r); g.arcTo(0,h,0,0,r); g.arcTo(0,0,w,0,r); g.fill();
@@ -1124,14 +1138,14 @@ function label(text, color, items=[]){
     g.fillStyle='#fff'; g.font='700 44px Inter, sans-serif'; g.textBaseline='middle'; g.fillText(text,52,HEAD/2+2);
     if(items.length){
       g.fillStyle='rgba(255,255,255,.14)'; g.fillRect(24,HEAD-4,w-48,2);
-      g.font='500 34px Inter, sans-serif';
+      g.font='600 43px Inter, sans-serif';
       items.forEach((it,i)=>{ const y=HEAD+8+i*LINE+LINE/2;
         g.fillStyle=color; g.beginPath(); g.arc(46,y,6,0,Math.PI*2); g.fill();
         const nm=typeof it==='string'?it:it.t, soon=typeof it!=='string'&&it.soon;
-        g.font='500 34px Inter, sans-serif'; g.fillStyle=soon?'#8fa3c2':'#dbe6f6'; g.fillText(nm,68,y+1);
-        if(soon){ const w0=g.measureText(nm).width; g.font='700 24px Inter, sans-serif'; const tx='EM BREVE', tw=g.measureText(tx).width;
-          g.fillStyle='rgba(255,197,61,.18)'; g.beginPath(); g.roundRect?g.roundRect(68+w0+14,y-17,tw+22,34,10):g.rect(68+w0+14,y-17,tw+22,34); g.fill();
-          g.fillStyle='#ffc53d'; g.fillText(tx,68+w0+25,y+1); g.font='500 34px Inter, sans-serif'; } });
+        g.font='600 43px Inter, sans-serif'; g.fillStyle=soon?'#8fa3c2':'#dbe6f6'; g.fillText(nm,68,y+1);
+        if(soon){ const w0=g.measureText(nm).width; g.font='700 28px Inter, sans-serif'; const tx='EM BREVE', tw=g.measureText(tx).width;
+          g.fillStyle='rgba(255,197,61,.18)'; g.beginPath(); g.roundRect?g.roundRect(68+w0+14,y-20,tw+22,40,10):g.rect(68+w0+14,y-20,tw+22,40); g.fill();
+          g.fillStyle='#ffc53d'; g.fillText(tx,68+w0+25,y+1); g.font='600 43px Inter, sans-serif'; } });
     }
   });
   const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true,sizeAttenuation:false}));
@@ -1685,6 +1699,7 @@ function showTab(i){
   requestAnimationFrame(()=>body.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%'));
 }
 document.getElementById('pClose').onclick=()=>{ if(document.getElementById('neDetail').classList.contains('open')){ neDetailClose(); return; } panel.classList.remove('open'); document.body.classList.remove('pano'); selected=null; curTab=null; };
+document.getElementById('pHomeBtn').onclick=()=>{ const d=document.getElementById('neDetail'); if(d.classList.contains('open')) neDetailClose(); document.getElementById('pClose').click(); };
 document.getElementById('pClose2').onclick=()=>document.getElementById('pClose').click();
 panel.addEventListener('scroll',()=>{ if(innerWidth>720){ panel.scrollTop=0; panel.scrollLeft=0; } }); // o painel nunca rola (só o corpo dele): evita o cabeçalho sumir no iPhone
 addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('pClose').click(); });
