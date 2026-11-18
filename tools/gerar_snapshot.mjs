@@ -1,36 +1,40 @@
 #!/usr/bin/env node
 // Gera o "snapshot" dos dados (reserva embutida no index.html) a partir da planilha-banco.
 //   node tools/gerar_snapshot.mjs --fetch [--bump]        baixa os CSV públicos da planilha
-//   node tools/gerar_snapshot.mjs exec.csv ne.csv [rp.csv] [ct.csv] [ar.csv] [dg.csv] [sp.csv] [--bump]  usa CSV locais
+//   node tools/gerar_snapshot.mjs exec.csv ne.csv [rp.csv] [ct.csv] [ar.csv] [dg.csv] [sp.csv] [nc.csv] [--bump]  usa CSV locais
 // A lógica de transformação é a MESMA do site (bloco /*DATALIB*/ do index.html, espelhado em tools/dados.lib.js).
 import fs from 'node:fs'; import vm from 'node:vm'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ID = '19Za-0_spkX6aiCL0e8h-pTljgTLzwSAb8GwBmXxEy3g', GID = { exec: 1963592069, ne: 892020825, rp: 435294578, ct: 843442876, ar: 57478241, lc: 1997489688, sp: 1393334488 };
+// Fontes (mesmas do site): A = "CAE - Execução Orçamentária" (Execução, NE, RP, NC) · B = "DO - 2026" (Certames, ARP) · antigo = Contratos e Sistemas PI
+const A = '1XYsCO3YrBFPov2aEXlQp36mgX9D86kMvtUA0M3AfUAA', B = '1gad1QGaEpzZKHCdHjNCjoE12KiF1eG7PBDiqHoBMjw4', OLD = '19Za-0_spkX6aiCL0e8h-pTljgTLzwSAb8GwBmXxEy3g';
+const SRC = { exec: [A, 404651175], ne: [A, 553150809], rp: [A, 962457407], nc: [A, 986011348], lc: [B, 2032627767], ar: [B, 558842760], ct: [OLD, 843442876], sp: [OLD, 1393334488] };
 const args = process.argv.slice(2), bump = args.includes('--bump'), pos = args.filter(a => !a.startsWith('--'));
 const htmlPath = path.join(raiz, 'index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 const lib = /\/\*DATALIB\*\/[\s\S]*?\/\*\/DATALIB\*\//.exec(html)[0];
 const CAEData = vm.runInNewContext(lib + ';CAEData');
 const siglas = JSON.parse(fs.readFileSync(path.join(raiz, 'tools/siglas.json'), 'utf8'));
-async function baixar(gid) {
-  const r = await fetch(`https://docs.google.com/spreadsheets/d/${ID}/export?format=csv&gid=${gid}`);
+async function baixar(k) {
+  const [id, gid] = SRC[k];
+  const r = await fetch(`https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`);
   const t = await r.text();
   if (!r.ok || t.trimStart().startsWith('<')) throw new Error('Planilha não está pública ou indisponível (HTTP ' + r.status + ')');
   return t;
 }
-const execCSV = args.includes('--fetch') ? await baixar(GID.exec) : fs.readFileSync(pos[0], 'utf8');
-const neCSV = args.includes('--fetch') ? await baixar(GID.ne) : fs.readFileSync(pos[1], 'utf8');
-const rpCSV = args.includes('--fetch') ? await baixar(GID.rp) : (pos[2] ? fs.readFileSync(pos[2], 'utf8') : null);
-const ctCSV = args.includes('--fetch') ? await baixar(GID.ct) : (pos[3] ? fs.readFileSync(pos[3], 'utf8') : null);
-const arCSV = args.includes('--fetch') ? await baixar(GID.ar) : (pos[4] ? fs.readFileSync(pos[4], 'utf8') : null);
-const lcCSV = args.includes('--fetch') ? await baixar(GID.lc) : (pos[5] ? fs.readFileSync(pos[5], 'utf8') : null);
-const spCSV = args.includes('--fetch') ? await baixar(GID.sp) : (pos[6] ? fs.readFileSync(pos[6], 'utf8') : null);
-const { ex, ne, rp, ct, ar, lc, sp } = CAEData.transformar(execCSV, neCSV, siglas, rpCSV, ctCSV, arCSV, lcCSV, spCSV); ex.siglas = siglas;
+const execCSV = args.includes('--fetch') ? await baixar('exec') : fs.readFileSync(pos[0], 'utf8');
+const neCSV = args.includes('--fetch') ? await baixar('ne') : fs.readFileSync(pos[1], 'utf8');
+const rpCSV = args.includes('--fetch') ? await baixar('rp') : (pos[2] ? fs.readFileSync(pos[2], 'utf8') : null);
+const ctCSV = args.includes('--fetch') ? await baixar('ct') : (pos[3] ? fs.readFileSync(pos[3], 'utf8') : null);
+const arCSV = args.includes('--fetch') ? await baixar('ar') : (pos[4] ? fs.readFileSync(pos[4], 'utf8') : null);
+const lcCSV = args.includes('--fetch') ? await baixar('lc') : (pos[5] ? fs.readFileSync(pos[5], 'utf8') : null);
+const spCSV = args.includes('--fetch') ? await baixar('sp') : (pos[6] ? fs.readFileSync(pos[6], 'utf8') : null);
+const ncCSV = args.includes('--fetch') ? await baixar('nc') : (pos[7] ? fs.readFileSync(pos[7], 'utf8') : null);
+const { ex, ne, rp, ct, ar, lc, sp, nc } = CAEData.transformar(execCSV, neCSV, siglas, rpCSV, ctCSV, arCSV, lcCSV, spCSV, ncCSV); ex.siglas = siglas;
 if (ne.rows.length < 1000 || ex.rows.length < 100) throw new Error(`Leitura suspeita (${ne.rows.length} NEs, ${ex.rows.length} linhas de execução) — abortando`);
 const tag = (id, o) => `<script id="${id}" type="application/json">${JSON.stringify(o)}</script>`;
 const re = id => new RegExp(`<script id="${id}" type="application/json">[\\s\\S]*?</script>`);
-const ids = ['execData', 'neData', 'rpData', 'ctData', 'arData', 'lcData', 'spData'], antes = ids.map(i => html.match(re(i))?.[0]).join();
-html = html.replace(re('execData'), () => tag('execData', ex)).replace(re('neData'), () => tag('neData', ne)).replace(re('rpData'), () => tag('rpData', rp)).replace(re('ctData'), () => tag('ctData', ct)).replace(re('arData'), () => tag('arData', ar)).replace(re('lcData'), () => tag('lcData', lc)).replace(re('spData'), () => tag('spData', sp));
+const ids = ['execData', 'neData', 'rpData', 'ctData', 'arData', 'lcData', 'spData', 'ncData'], antes = ids.map(i => html.match(re(i))?.[0]).join();
+html = html.replace(re('execData'), () => tag('execData', ex)).replace(re('neData'), () => tag('neData', ne)).replace(re('rpData'), () => tag('rpData', rp)).replace(re('ctData'), () => tag('ctData', ct)).replace(re('arData'), () => tag('arData', ar)).replace(re('lcData'), () => tag('lcData', lc)).replace(re('spData'), () => tag('spData', sp)).replace(re('ncData'), () => tag('ncData', nc));
 const depois = ids.map(i => html.match(re(i))[0]).join();
 if (antes === depois) { console.log('SEM_MUDANCA: dados iguais ao snapshot publicado'); process.exit(0); }
 let msg = `MUDOU: ${ne.rows.length} NEs · ${ex.rows.length} linhas de execução · ref ${ne.ref}`;

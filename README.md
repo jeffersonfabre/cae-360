@@ -5,7 +5,7 @@ Painel 3D (three.js) do Centro de Aquisições Específicas (CAE, UASG 120195): 
 - Página única: `index.html` (sem build)
 - Dados de exemplo; integração futura com Tesouro Gerencial, SIAFI e Comprasnet/PNCP
 
-Desenvolvido por **DomDevLabs** · v1.16.13
+Desenvolvido por **DomDevLabs** · v1.17.0
 
 ## Instalar no celular
 
@@ -16,7 +16,15 @@ O ícone é o brasão do CAE e o app abre em tela cheia com o nome **CAE Dashboa
 
 ## Banco de dados (leitura ao vivo)
 
-O site lê a planilha pública “BD Site Dashboad CAE” (abas Execução e NE) direto do navegador:
+O site lê planilhas públicas do Google direto do navegador. Fontes por tópico:
+
+| Tópico | Planilha | Aba |
+|---|---|---|
+| Execução Orçamentária, Nota de Empenho, Restos a Pagar, Nota de Crédito | CAE - Execução Orçamentária | Execução Orçamentária · NE · RP Mensal Grd Cmdo · NC |
+| Controle Licitações, Atas SRP | DO - 2026 | Certames · ARP |
+| Contratos, Sistemas PI | BD Site Dashboad CAE | DC - Contratos Publicados · Sistemas PI |
+
+Essas informações são atualizadas de segunda a sexta, às 7h. A leitura acontece:
 ao abrir, a cada 10 minutos e quando o botão **Atualizar** (topo da tela) é clicado. Assim, quando a planilha muda, o site acompanha sem novo deploy.
 Se o Google não responder, o site usa a cópia de reserva embutida no `index.html` e avisa na tela.
 

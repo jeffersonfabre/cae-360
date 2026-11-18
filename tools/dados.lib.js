@@ -57,7 +57,7 @@ const CAEData=(()=>{
     return rows;
   }
   function notas(rows,siglas){
-    const t=table(rows,['Data','NE','UGR','Valor a NE']), g=t.get;
+    const t=table(rows,['Data','NE','UGR']), g0=t.get, g=(r,n)=>n==='Valor a NE'?(g0(r,'Valor da NE')||g0(r,'Valor a NE')):g0(r,n);
     const porNE=new Map();
     for(const r of t.data){ const ne=g(r,'NE'); if(!ne) continue;
       let o=porNE.get(ne); if(!o){ o={r,linhas:[]}; porNE.set(ne,o); }
@@ -95,28 +95,38 @@ const CAEData=(()=>{
         ...V.map(k=>money(t.get(r,k))),t.get(r,'Nº DE PARCELAS'),money(t.get(r,'VALOR DA PARCELA')),t.get(r,'UNIDADES REQUISITANTES'),t.get(r,'CONCILIAÇÃO DAS FONTES'),t.get(r,'Nº CONTROLE PNCP CONTRATO'),t.get(r,'ATUALIZAÇÃO DA FONTE')]); }
     return {ref,cols:['num','tipo','compra','modal','proc','objeto','info','cat','forn','cnpj','assin','ini','fim','vini','vglob','vacum','parc','vparc','unid','concil','pncp','fonteAtual'],rows};
   }
-  function atas(csv){ // aba "DO - ARP": atas de registro de preços vigentes
+  function atas(csv){ // aba "ARP" (planilha DO - 2026): atas de registro de preços; cabeçalho na linha de 'SITUAÇÃO' / 'Nº DA ATA'
     const all=parseCSV(csv), t=table(all,['SITUAÇÃO','Nº DA ATA']);
     let ref=''; for(const r of all.slice(0,8)){ const i=r.indexOf('ATUALIZADO EM'); if(i>=0){ ref=String(r[i+1]||'').trim(); break; } }
     const money=v=>v===''?null:r2(num(v)), rows=[];
     for(const r of t.data){ const n=t.get(r,'Nº DA ATA'); if(!n) continue; const g=k=>t.get(r,k);
-      rows.push([n,g('Nº DO PREGÃO'),g('OBJETO'),g('FORNECEDOR'),g('CNPJ DO FORNECEDOR'),isoDate(g('DATA DA DIVULGAÇÃO NO COMPRAS.GOV')),isoDate(g('DATA DA ASSINATURA')),isoDate(g('INÍCIO DA VIGÊNCIA')),isoDate(g('FIM DA VIGÊNCIA')),
+      rows.push([n,g('Nº DO PREGÃO'),g('OBJETO'),g('FORNECEDOR'),g('CNPJ DO FORNECEDOR'),isoDate(g('INCLUSÃO NO COMPRAS.GOV (MARCO TÉCNICO)')||g('DATA DA DIVULGAÇÃO NO COMPRAS.GOV')),isoDate(g('DATA DA ASSINATURA')),isoDate(g('INÍCIO DA VIGÊNCIA')),isoDate(g('FIM DA VIGÊNCIA')),
         money(g('VALOR TOTAL REGISTRADO')),g('QUANTIDADE DE ITENS'),g('ITENS CONTEMPLADOS'),g('Nº CONTROLE PNCP ATA'),g('DATA DA PUBLICAÇÃO NO PNCP'),g('ID COMPRA'),g('AGENTE DE CONTRATAÇÃO'),g('ITENS RESUMIDOS'),g('PAG'),g('UNIDADE APOIADA'),g('SITUAÇÃO DO ENRIQUECIMENTO')]); }
     return {ref,cols:['ata','pregao','objeto','forn','cnpj','divulg','assin','ini','fim','valor','qtd','itens','pncpAta','pubPncp','idCompra','agente','resumo','pag','unidade','enriq'],rows};
   }
-  function gerencial(csv){ // aba "DO - Gerencial": 1 linha por contratação do PCA / certame (cabeçalho na linha com STATUS e DFD)
-    const all=parseCSV(csv), h=all.findIndex(r=>r.includes('STATUS')&&r.includes('DFD')); if(h<0) throw new Error('Cabeçalho não encontrado');
-    const c0=all[h].indexOf('STATUS'), D=i=>isoDate(i), money=v=>String(v||'').trim()===''?null:r2(num(v)), int=v=>String(v||'').trim()===''?null:Math.round(num(v)), rows=[];
-    for(const r of all.slice(h+1)){ const x=Array.from({length:34},(_,i)=>String(r[c0+i]==null?'':r[c0+i]).trim()); if(!x[0]&&!x[1]&&!x[9]) continue;
-      rows.push([x[0],x[1],x[2],D(x[3]),D(x[4]),x[5],x[6],x[7],x[8],x[9],x[10],x[11],x[12],x[13],x[14],D(x[15]),D(x[16]),D(x[17]),int(x[18]),x[19],D(x[20]),money(x[21]),D(x[22]),D(x[23]),D(x[24]),x[25],int(x[26]),int(x[27]),int(x[28]),int(x[29]),int(x[30]),x[31],D(x[32]),x[33]]); }
+  function gerencial(csv){ // aba "Certames" (planilha DO - 2026): 1 linha por contratação; cabeçalho na linha com STATUS e DFD; colunas lidas pelo nome
+    const t=table(parseCSV(csv),['STATUS','DFD']), g=t.get, D=isoDate, money=v=>String(v||'').trim()===''?null:r2(num(v)), int=v=>String(v||'').trim()===''?null:Math.round(num(v)), rows=[];
+    for(const r of t.data){ const st=g(r,'STATUS'), dfd=g(r,'DFD'), nc=g(r,'Nº DA CONTRATAÇÃO'); if(!st&&!dfd&&!nc) continue;
+      rows.push([st,dfd,g(r,'ID DA CONTRATAÇÃO'),'','',g(r,'UApd'),'',g(r,'MODALIDADE'),nc,g(r,'OBJETO'),g(r,'NATUREZA DO OBJETO'),g(r,'SISTEMA'),g(r,'COMPLEXIDADE'),g(r,'SEÇÃO'),g(r,'DEMANDA'),
+        D(g(r,'DATA ESTIMADA PARA O ÍNICIO DO PROCESSO')||g(r,'DATA ESTIMADA PARA O INÍCIO DO PROCESSO')),D(g(r,'DATA ESTIMADA PARA A CONCLUSÃO DO PROCESSO')),D(g(r,'CHEGADA DOS DOC. INICIAIS AO CAE')),int(g(r,'QUANTIDADE DE ITENS')),g(r,'PAG'),D(g(r,'DATA DO PAG')),money(g(r,'VALOR ESTIMADO')),
+        D(g(r,'DATA DE ENVIO À ANÁLISE JURÍDICA')),D(g(r,'DATA DA PUBLICAÇÃO')),D(g(r,'ABERTURA DA SESSÃO PÚBLICA')),g(r,'AGENTE DE CONTRATAÇÃO'),int(g(r,'ITENS REVOGADOS E/OU CANCELADOS')),int(g(r,'ITENS DESERTOS')),int(g(r,'ITENS FRACASSADOS')),int(g(r,'ITENS EM ANDAMENTO')),int(g(r,'ITENS HOMOLOGADOS')),
+        g(r,'ANDAMENTO DA SELEÇÃO DE FORNECEDORES'),D(g(r,'DATA DA PRIMEIRA ARP')),'']); }
     return {ref:'',cols:['status','dfd','idpca','pcaIni','pcaFim','area','anoPca','modal','nContr','objeto','natureza','sistema','complex','secao','demanda','ini','fim','chegada','qtd','pag','dataPag','valor','juridica','publ','abertura','agente','revog','desert','fracass','andam','homol','pctHomol','primArp','dfdVig'],rows};
+  }
+  function nc(csv){ // aba "NC": notas de crédito (cabeçalho: Emissão, Número, ..., CRÉDITO RECEBIDO)
+    const t=table(parseCSV(csv),['Emissão','Número','CRÉDITO RECEBIDO']), g=t.get, rows=[];
+    for(const r of t.data){ const n=g(r,'Número'); if(!n) continue;
+      rows.push([isoDate(g(r,'Emissão')),n.replace(/^\d+(\d{4}NC\d+)$/,'$1'),g(r,'UGR'),g(r,'UG Exec'),g(r,'PTRES'),g(r,'FONTE'),g(r,'ND'),g(r,'PI'),g(r,'Evento'),g(r,'Esfera'),g(r,'RO'),g(r,'Obs'),r2(num(g(r,'CRÉDITO RECEBIDO')))]); }
+    rows.sort((x,y)=>x[0]<y[0]?1:x[0]>y[0]?-1:x[1]<y[1]?1:-1);
+    const dts=rows.map(r=>r[0]).filter(Boolean), mx=dts.reduce((m,d)=>d>m?d:m,'');
+    return {ref:mx?mx.slice(8)+'/'+mx.slice(5,7)+'/'+mx.slice(0,4):'',cols:['data','nc','ugr','ugexec','ptres','fonte','nd','pi','evento','esfera','ro','obs','valor'],rows};
   }
   function sistemas(csv){ // aba "Sistemas PI": Plano Interno -> Sigla do sistema
     const t=table(parseCSV(csv),['Plano Interno','Sigla']), g=t.get, pi={};
     for(const r of t.data){ const p=g(r,'Plano Interno'), s=g(r,'Sigla'); if(p&&s) pi[p]=s; }
     return {pi};
   }
-  function transformar(execCSV,neCSV,siglas,rpCSV,ctCSV,arCSV,lcCSV,spCSV){
+  function transformar(execCSV,neCSV,siglas,rpCSV,ctCSV,arCSV,lcCSV,spCSV,ncCSV){
     const ne=notas(parseCSV(neCSV),siglas), ex=execucao(parseCSV(execCSV),siglas);
     ex.ref=ne.ref; Object.assign(ex.ugs,ne.ugs);
     let r=null; if(rpCSV){ try{ r=rp(rpCSV); if(!r.meses.length) r=null; }catch(e){ r=null; } }
@@ -124,8 +134,9 @@ const CAEData=(()=>{
     let a=null; if(arCSV){ try{ a=atas(arCSV); if(!a.rows.length) a=null; }catch(e){ a=null; } }
     let l=null; if(lcCSV){ try{ l=gerencial(lcCSV); if(!l.rows.length) l=null; }catch(e){ l=null; } }
     let sp=null; if(spCSV){ try{ sp=sistemas(spCSV); if(!Object.keys(sp.pi).length) sp=null; }catch(e){ sp=null; } }
-    return {ex,ne,rp:r,ct:c,ar:a,lc:l,sp};
+    let n=null; if(ncCSV){ try{ n=nc(ncCSV); if(!n.rows.length) n=null; }catch(e){ n=null; } }
+    return {ex,ne,rp:r,ct:c,ar:a,lc:l,sp,nc:n};
   }
-  return {parseCSV,num,transformar,execucao,notas,rp,contratos,atas,gerencial,sistemas,corrigirSaldos};
+  return {parseCSV,num,transformar,execucao,notas,rp,contratos,atas,gerencial,sistemas,nc,corrigirSaldos};
 })();
 /*/DATALIB*/
