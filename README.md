@@ -34,4 +34,4 @@ Para regravar a cópia de reserva: Actions › “Atualizar snapshot de reserva�
 
 Versão corporativa do painel, sem 3D: visão geral da execução orçamentária, orçamento por UG/ND/PI, notas de empenho, contratos, atas de registro, licitações do PCA e restos a pagar.
 Lê as mesmas planilhas ao vivo (mesma biblioteca `tools/dados.lib.js`) e, se o Google não responder, usa a cópia de reserva embutida no `index.html` do CAE-360.
-Endereço: https://cae-dashboard-3d.vercel.app/executivo · v1.0.1
+Endereço: https://cae-360.vercel.app/executivo · v1.0.1
